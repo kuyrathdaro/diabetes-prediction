@@ -1,6 +1,6 @@
 <template>
     <header>
-        <div class="flex flex-col items-center text-center">
+        <div class="flex flex-col items-center">
             <div class="flex items-center mb-4">
                 <h1 class="text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl">
                     Diabetes Prediction</h1>
@@ -8,8 +8,14 @@
             </div>
             <p class="mb-6 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 xl:px-48">Predict your diabetes risk
                 based on health metrics.</p>
+            <div class="flex flex-col md:flex-row justify-center gap-4 w-full">
+                <div class="flex-1 flex md:justify-end">
+                    <Alert />
+                </div>
+                <div class="flex-1 flex md:justify-start">
+                    <Instruction />
+                </div>
+            </div>
         </div>
-        <Alert />
-        <Instruction />
     </header>
 </template>
