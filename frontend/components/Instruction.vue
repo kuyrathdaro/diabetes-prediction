@@ -1,16 +1,15 @@
 <script setup lang="ts">
-const items = [
-    {
-        label: "Instruction",
-        icon: 'i-heroicons-information-circle',
-        defaultOpen: true,
-        content: 'Test'
-    }
-];
+const items = ref([
+  {
+    label: 'Instruction',
+    icon: 'i-heroicons-information-circle',
+    content: 'You have nothing to do, @nuxt/icon will handle it automatically.'
+  }
+])
 </script>
 
 <template>
-    <div class="flex justify-center items-center">
-        <UAccordion :items="items" />
-    </div>
+<div class="flex justify-items-center items-center">
+    <UAccordion multiple :items="items" />
+</div>
 </template>

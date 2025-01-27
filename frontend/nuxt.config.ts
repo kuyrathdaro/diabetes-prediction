@@ -3,7 +3,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
   devtools: { enabled: true },
   debug: true,
-  modules: ['@nuxt/ui', '@nuxtjs/tailwindcss', '@nuxt/icon'],
+  modules: ['@nuxt/ui', '@nuxt/icon'],
   colorMode: {
     preference: 'light'
   },
