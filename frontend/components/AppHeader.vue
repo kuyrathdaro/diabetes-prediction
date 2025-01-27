@@ -10,6 +10,6 @@
                 based on health metrics.</p>
         </div>
         <Alert />
-        <Instruction ?></Instruction>
+        <Instruction />
     </header>
 </template>
