@@ -1,16 +1,63 @@
 <script setup lang="ts">
-import Alert from "./Alert.vue";
-import Instruction from "./Instruction.vue";
-const items = ref([
+import type { AccordionItem } from "@nuxt/ui";
+
+const items = ref<AccordionItem[]>([
     {
         label: 'Instruction',
         icon: 'i-heroicons-information-circle',
-        component: Instruction
+        content: `
+         <div class="text-left bg-blue-50 p-4 rounded-lg border border-blue-200 shadow-sm">
+            <h2 class="text-center text-md font-semibold text-blue-700 mb-4">How to Use Diabetes Prediction Tool</h2>
+            <p class="text-sm text-gray-700 mb-4">
+                Follow the instructions below to predict your diabetes risk based on your health metrics:
+            </p>
+            <ul class="text-sm list-disc pl-5">
+                <li>
+                <strong class="font-medium">Step 1:</strong> Enter your health information.
+                <p class="text-gray-600">
+                    Input your health metrics such as age, weight, height, blood pressure, and other key indicators that affect your diabetes risk.
+                </p>
+                </li>
+                <li>
+                <strong class="font-medium">Step 2:</strong> Click on the "Submit" button.
+                <p class="text-gray-600">
+                    Once you've filled out all required fields, click the "Submit" button to calculate your diabetes risk.
+                </p>
+                </li>
+                <li>
+                <strong class="font-medium">Step 3:</strong> View your prediction result.
+                <p class="text-gray-600">
+                    After submitting, you will see your risk prediction on the screen. The result will help you understand your risk level.
+                </p>
+                </li>
+                <li>
+                <strong class="font-medium">Step 4:</strong> Take necessary actions based on the result.
+                <p class="text-gray-600">
+                    If your risk is high, consider consulting with a healthcare professional for further assessment and guidance.
+                </p>
+                </li>
+            </ul>
+        
+            <div class="mt-4 text-left">
+                <p class="text-gray-600 text-sm">
+                Remember, this tool provides an estimate based on the data you enter and should not replace professional medical advice.
+                </p>
+            </div>
+        </div>
+        `,
     },
     {
-        label: 'Important Notice',
+        label: 'Warning and Important Notice',
         icon: 'i-heroicons-exclamation-circle',
-        component: Alert
+        content: `
+        <div id="alert-additional-content-1"
+            class="p-4 mb-4 text-red-800 border border-red-300 rounded-lg bg-red-50 w-full max-w-full text-left" role="alert">
+            <div class="mt-2 mb-4 text-sm">
+                The diabetes prediction provided by this tool is not accurate and should not be used as a substitute for
+                professional medical advice. Please consult a healthcare provider for a proper diagnosis.
+            </div>
+        </div>
+        `
     }
 ]);
 </script>
@@ -27,27 +74,12 @@ const items = ref([
                 Predict your diabetes risk based on health metrics.
             </p>
             <div class="w-full max-w-2xl mx-auto">
-                <UAccordion multiple :items="items">
-                    <!-- Accordion Header with Conditional Styling -->
-                    <template #header="{ item }">
-                        <div class="flex items-center space-x-2 hover:bg-gray-100 px-2 py-1 rounded-md" :class="{
-                            'text-red-600 font-semibold': item.label === 'Important Notice',
-                            'text-blue-600': item.label === 'Instruction'
-                        }">
-                            <i :class="item.icon" />
-                            <span>{{ item.label }}</span>
-                        </div>
-                    </template>
-
-                    <!-- Accordion Content Slot -->
+                <UAccordion :items="items">
                     <template #content="{ item }">
-                        <div class="w-full overflow-hidden">
-                            <component :is="item.component" :key="item.label" />
-                        </div>
+                        <div v-html="item.content"></div>
                     </template>
                 </UAccordion>
             </div>
-
         </div>
     </header>
 </template>
