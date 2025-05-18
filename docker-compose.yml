@@ -1,0 +1,29 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: diabetes-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/data:/app/data
+      - ./backend/models:/app/models
+    networks:
+      - diabetes-net
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: diabetes-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      NUXT_PUBLIC_API_URL: http://localhost:800
+    networks:
+      - diabetes-net
+    depends_on:
+      - backend
+
+networks:
+  diabetes-net:
+    driver: bridge

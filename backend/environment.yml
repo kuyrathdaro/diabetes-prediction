@@ -1,0 +1,13 @@
+name: diabetes-api
+channels:
+ - defaults
+ - conda-forge
+dependencies:
+  - python=3.10
+  - numpy
+  - scikit-learn
+  - pandas
+  - pip
+  - pip:
+    - fastapi
+    - uvicorn
