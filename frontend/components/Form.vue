@@ -25,6 +25,18 @@
         <UInput v-model="state.glucose" type="number" class="text-base p-4" />
       </UFormField>
 
+      <UFormField name="blood_pressure">
+        <template #label>
+          <div class="flex items-center gap-1">
+            Blood Pressure
+            <UTooltip text="Diastolic blood pressure (mm Hg).">
+              <UIcon name="i-heroicons-question-mark-circle" class="w-4 h-4 text-gray-400 cursor-pointer" />
+            </UTooltip>
+          </div>
+        </template>
+        <UInput v-model="state.blood_pressure" type="number" class="text-base p-4" />
+      </UFormField>
+
       <UFormField name="skin_thickness">
         <template #label>
           <div class="flex items-center gap-1">
@@ -102,13 +114,17 @@
 <script setup lang="ts">
 import * as z from "zod";
 import type { FormSubmitEvent } from "#ui/types";
+import { DiabetesService } from "~/services/diabetes";
 
 const state = reactive<Partial<Schema>>({});
 const errors = ref<string[]>([]);
+const prediction = ref<string | null>(null);
+const diabetesService = new DiabetesService();
 
 const schema = z.object({
   pregnancies: z.number().min(0).max(20),
   glucose: z.number().min(0).max(300),
+  blood_pressure: z.number().min(0).max(200),
   skin_thickness: z.number().min(0).max(100),
   insulin: z.number().min(0).max(900),
   bmi: z.number().min(0).max(100),
@@ -118,14 +134,19 @@ const schema = z.object({
 
 type Schema = z.output<typeof schema>;
 
-function onSubmit(event: FormSubmitEvent<Schema>) {
+async function onSubmit(event: FormSubmitEvent<Schema>) {
   errors.value = [];
+  prediction.value = null;
   const result = schema.safeParse(state);
   if (!result.success) {
     errors.value = result.error.errors.map((err) => err.message);
   } else {
-    console.log("Form submitted successfully", result.data);
-    // You could emit a result here if needed
+    try {
+      const res = await diabetesService.predictDiabetes(result.data);
+      prediction.value = res.message;
+    } catch (e: any) {
+      errors.value = [e.message || "Prediction failed"];
+    }
   }
 }
 </script>

@@ -6,6 +6,7 @@ from sklearn.preprocessing import StandardScaler
 from app.schemas.diabetes import DiabetesInput
 from app.core.config import MODEL_PATH, SCALER_PATH, DATA_PATH, FEATURES
 
+
 def train_model():
     df = pd.read_csv(DATA_PATH)
     X = df[FEATURES]
@@ -27,11 +28,12 @@ def load_model_and_scaler():
     return joblib.load(MODEL_PATH), joblib.load(SCALER_PATH)
 
 def make_prediction(model, scaler, input_data: DiabetesInput):
-    data_dict = input_data.dict()
+    data_dict = input_data.model_dump()
     input_df = pd.DataFrame([data_dict], columns=FEATURES)
     scaled_input = scaler.transform(input_df)
     prediction = model.predict(scaled_input)[0]
     return {
+        "input": input_data,
         "prediction": int(prediction),
         "message": "The person is diabetic" if prediction == 1 else "The person is not diabetic"
     }

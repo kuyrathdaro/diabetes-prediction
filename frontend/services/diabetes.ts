@@ -8,8 +8,8 @@ export class DiabetesService {
     this.baseUrl = config.public.apiBase as string;
   }
 
-  async predict(input: Record<string, any>): Promise<Response> {
-    return await $fetch(`${this.baseUrl}/diabetes/predict`, {
+  async predictDiabetes(input: Record<string, any>): Promise<Response> {
+    return await $fetch(`${this.baseUrl}/predict-diabetes`, {
       method: 'POST',
       body: input,
     })
