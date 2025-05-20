@@ -1,4 +1,4 @@
-name: diabetes-api
+name: ml
 channels:
  - defaults
  - conda-forge
