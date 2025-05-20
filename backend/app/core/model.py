@@ -33,7 +33,6 @@ def make_prediction(model, scaler, input_data: DiabetesInput):
     scaled_input = scaler.transform(input_df)
     prediction = model.predict(scaled_input)[0]
     return {
-        "input": input_data,
+        "input": data_dict,
         "prediction": int(prediction),
-        "message": "The person is diabetic" if prediction == 1 else "The person is not diabetic"
     }

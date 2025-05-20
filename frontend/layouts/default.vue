@@ -1,7 +1,9 @@
 <template>
-    <div>
+    <div class="flex flex-col min-h-screen">
         <Header />
-        <slot />
+        <main class="flex1 pb-8">
+            <slot />
+        </main>
         <Footer />
     </div>
 </template>

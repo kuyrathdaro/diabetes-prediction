@@ -109,17 +109,24 @@
       </ul>
     </div>
   </UForm>
+  <div v-if="diabetesStore.prediction !== null" class="max-w-lg mx-auto mt-8">
+    <PredictionResult
+      :data="diabetesStore.inputData"
+      :prediction="diabetesStore.prediction"
+    />
+</div>
 </template>
 
 <script setup lang="ts">
 import * as z from "zod";
 import type { FormSubmitEvent } from "#ui/types";
-import { DiabetesService } from "~/services/diabetes";
+import { useDiabetesStore } from '~/stores/diabetes';
+
+const diabetesStore = useDiabetesStore();
 
 const state = reactive<Partial<Schema>>({});
 const errors = ref<string[]>([]);
-const prediction = ref<string | null>(null);
-const diabetesService = new DiabetesService();
+const prediction = ref<boolean | null>(null);
 
 const schema = z.object({
   pregnancies: z.number().min(0).max(20),
@@ -141,11 +148,10 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   if (!result.success) {
     errors.value = result.error.errors.map((err) => err.message);
   } else {
-    try {
-      const res = await diabetesService.predictDiabetes(result.data);
-      prediction.value = res.message;
-    } catch (e: any) {
-      errors.value = [e.message || "Prediction failed"];
+    await diabetesStore.predict(result.data);
+    prediction.value = diabetesStore.prediction;
+    if (diabetesStore.error) {
+      errors.value = [diabetesStore.error];
     }
   }
 }
