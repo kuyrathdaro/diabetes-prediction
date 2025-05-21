@@ -6,11 +6,19 @@ const diabetesService = new DiabetesService();
 const DB_NAME = "diabetes-db";
 const STORE_NAME = "history";
 
+function getCurrentDBVersion() {
+  return Number(localStorage.getItem("diabetes-db-version") || 1);
+}
+
 async function getDB() {
-  return openDB(DB_NAME, 1, {
+  const version = getCurrentDBVersion();
+  return openDB(DB_NAME, version, {
     upgrade(db) {
       if (!db.objectStoreNames.contains(STORE_NAME)) {
-        db.createObjectStore(STORE_NAME, { keyPath: "id", autoIncrement: true });
+        db.createObjectStore(STORE_NAME, {
+          keyPath: "id",
+          autoIncrement: true,
+        });
       }
     },
   });
@@ -21,7 +29,9 @@ async function saveHistoryToDB(history: any[]) {
   const tx = db.transaction(STORE_NAME, "readwrite");
   await tx.objectStore(STORE_NAME).clear();
   for (const item of history) {
-    await tx.objectStore(STORE_NAME).add(item);
+    // Always clone to plain object
+    const plainItem = JSON.parse(JSON.stringify(item));
+    await tx.objectStore(STORE_NAME).add(plainItem);
   }
   await tx.done;
 }
@@ -29,6 +39,24 @@ async function saveHistoryToDB(history: any[]) {
 async function loadHistoryFromDB() {
   const db = await getDB();
   return await db.getAll(STORE_NAME);
+}
+
+// Add this function above your store definition
+async function resetHistoryStore() {
+  // Bump the version to force upgrade and recreate the store
+  const newVersion = 1;
+  const db = await openDB(DB_NAME, newVersion, {
+    upgrade(db) {
+      if (db.objectStoreNames.contains(STORE_NAME)) {
+        db.deleteObjectStore(STORE_NAME);
+      }
+      db.createObjectStore(STORE_NAME, {
+        keyPath: "id",
+        autoIncrement: true,
+      });
+    },
+  });
+  db.close();
 }
 
 export const useDiabetesStore = defineStore("diabetes", {
@@ -51,13 +79,18 @@ export const useDiabetesStore = defineStore("diabetes", {
         const result = await diabetesService.predictDiabetes(input_data);
         // Convert 1 to true (diabetes), 0 to false (not diabetes)
         this.prediction = this.prediction = result?.data?.prediction === 1;
-        // Store in history
-        this.history.push({
-          input: { ...input_data },
+        // Only use plain objects and primitives
+        const plainInput = JSON.parse(JSON.stringify(input_data));
+        const historyItem = {
+          ...plainInput,
           prediction: this.prediction,
           date: new Date().toISOString(),
-        });
-        await saveHistoryToDB(this.history);
+        };
+        this.history.push(historyItem);
+        // Save only plain objects to IndexedDB
+        await saveHistoryToDB(
+          this.history.map((item) => JSON.parse(JSON.stringify(item)))
+        );
       } catch (err: any) {
         this.error = "Failed to fetch prediction";
         console.error("Prediction API error:", err);
@@ -70,7 +103,8 @@ export const useDiabetesStore = defineStore("diabetes", {
     },
     async clearHistory() {
       this.history = [];
-      await saveHistoryToDB([]);
-    }
+      await resetHistoryStore();
+      window.location.reload(); // <-- Add this line
+    },
   },
 });
