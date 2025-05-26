@@ -123,6 +123,14 @@ GPL
 
 ---
 
+## Disclaimer
+
+This project is intended for educational and demonstration purposes only.  
+**It is not a medical device and should not be used for real medical diagnosis or treatment.**  
+Always consult a qualified healthcare professional for medical advice.
+
+---
+
 ## Acknowledgements
 
 - [PIMA Diabetes Dataset](https://www.kaggle.com/datasets/uciml/pima-indians-diabetes-database)
