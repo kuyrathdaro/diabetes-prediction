@@ -1,21 +1,25 @@
-# 1. Use official Python image
-FROM python:3.11-slim
+# Use a large Node.js base image to build the application and name it "build"
+FROM node:18-alpine as build
 
-# 2. Set working directory
+# Exact same steps as before
 WORKDIR /app
 
-# 3. Install dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+COPY package.json /app
 
-# 4. Copy all source code
-COPY . .
+RUN npm install
 
-# 5. Create required folders if they don't exist (for saved models)
-RUN mkdir -p saved data
+COPY . /app
 
-# 6. Expose FastAPI port
-EXPOSE 8000
+RUN npm run build
 
-# 7. Command to run the FastAPI app
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Create a new Docker image and name it "prod"
+FROM node:18-alpine as prod
+
+WORKDIR /app
+
+# Copy the built application from the "build" image into the "prod" image
+# This will only copy whatever is in the .output folder and ignore useless files like node_modules!
+COPY --from=build /app/.output /app/.output
+
+# Start is the same as before
+CMD ["node", ".output/server/index.mjs"] 
