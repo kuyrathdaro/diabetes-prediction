@@ -6,8 +6,12 @@ const diabetesService = new DiabetesService();
 const DB_NAME = "diabetes-db";
 const STORE_NAME = "history";
 
+// Version helpers
 function getCurrentDBVersion() {
   return Number(localStorage.getItem("diabetes-db-version") || 1);
+}
+function setCurrentDBVersion(version: number) {
+  localStorage.setItem("diabetes-db-version", String(version));
 }
 
 async function getDB() {
@@ -29,7 +33,6 @@ async function saveHistoryToDB(history: any[]) {
   const tx = db.transaction(STORE_NAME, "readwrite");
   await tx.objectStore(STORE_NAME).clear();
   for (const item of history) {
-    // Always clone to plain object
     const plainItem = JSON.parse(JSON.stringify(item));
     await tx.objectStore(STORE_NAME).add(plainItem);
   }
@@ -41,10 +44,10 @@ async function loadHistoryFromDB() {
   return await db.getAll(STORE_NAME);
 }
 
-// Add this function above your store definition
+// This function now bumps the version and stores it in localStorage
 async function resetHistoryStore() {
-  // Bump the version to force upgrade and recreate the store
-  const newVersion = 1;
+  const newVersion = Date.now(); // Always use a new, higher version
+  setCurrentDBVersion(newVersion);
   const db = await openDB(DB_NAME, newVersion, {
     upgrade(db) {
       if (db.objectStoreNames.contains(STORE_NAME)) {
@@ -77,9 +80,7 @@ export const useDiabetesStore = defineStore("diabetes", {
 
       try {
         const result = await diabetesService.predictDiabetes(input_data);
-        // Convert 1 to true (diabetes), 0 to false (not diabetes)
-        this.prediction = this.prediction = result?.data?.prediction === 1;
-        // Only use plain objects and primitives
+        this.prediction = result?.data?.prediction === 1;
         const plainInput = JSON.parse(JSON.stringify(input_data));
         const historyItem = {
           ...plainInput,
@@ -87,7 +88,6 @@ export const useDiabetesStore = defineStore("diabetes", {
           date: new Date().toISOString(),
         };
         this.history.push(historyItem);
-        // Save only plain objects to IndexedDB
         await saveHistoryToDB(
           this.history.map((item) => JSON.parse(JSON.stringify(item)))
         );
@@ -104,7 +104,7 @@ export const useDiabetesStore = defineStore("diabetes", {
     async clearHistory() {
       this.history = [];
       await resetHistoryStore();
-      window.location.reload(); // <-- Add this line
+      window.location.reload();
     },
   },
 });
