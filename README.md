@@ -39,7 +39,20 @@ This project features a FastAPI backend for machine learning inference and a Nux
 
 ---
 
-### Backend Setup
+## Dataset Setup
+1. Download the dataset:
+Visit the Kaggle page for the [PIMA Diabetes Dataset](https://www.kaggle.com/datasets/uciml/pima-indians-diabetes-database) and download the diabetes.csv file.
+
+1. Place the file:
+Copy diabetes.csv into the backend/data/ folder (create the folder if it doesn't exist):
+
+```bash
+backend/data/diabetes.csv
+```
+
+---
+
+## Backend Setup
 
 1. **Install dependencies:**
     ```bash
@@ -51,13 +64,34 @@ This project features a FastAPI backend for machine learning inference and a Nux
     ```bash
     uvicorn main:app --reload
     ```
+3. **Train the model (first-time setup):**
+   
+    After starting the server, open your browser or use a tool like curl or Postman to call the training route:
+    ```bash
+    POST http://localhost:8000/train-model
+    ```
 
-3. **API will be available at:**  
-   `http://localhost:8000`
+1. **API will be available at:**
+   ```http://localhost:8000```
 
 ---
 
-### Frontend Setup
+## Model Training via API
+
+- Endpoint: POST /train-model
+- Purpose: Trains a new model and saves it to the models/ directory
+- Requires: data/diabetes.csv to be present
+  
+**Example (with curl):**
+
+  ```bash
+  POST http://localhost:8000/train-model
+  ```
+
+---
+
+
+## Frontend Setup
 
 1. **Install dependencies:**
     ```bash
@@ -75,7 +109,7 @@ This project features a FastAPI backend for machine learning inference and a Nux
 
 ---
 
-### Docker (Optional)
+## Docker (Optional)
 
 - You can use the provided Dockerfiles to build and run both frontend and backend containers.
 - Make sure to check `.dockerignore` files for optimized builds.
