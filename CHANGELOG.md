@@ -19,3 +19,8 @@ All notable changes to this project will be documented in this file.
 - Documentation and setup instructions
 
 ---
+
+## [1.0.1] - 2025-06-17
+
+### Change
+- Update README.md
