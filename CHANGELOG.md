@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [1.1.0] - 2025-06-20
+
+### Added
+- Demo GIF added to README.md
+- "Reset" button added to the prediction form
+
+### Changed
+- Update README.md
+
+---
+
+## [1.0.1] - 2025-06-17
+
+### Change
+- Update README.md
+
+---
+
 ## [1.0.0] - 2025-05-27
 
 ### Added
@@ -17,10 +35,3 @@ All notable changes to this project will be documented in this file.
   - Clear history functionality
 - Docker support for both frontend and backend
 - Documentation and setup instructions
-
----
-
-## [1.0.1] - 2025-06-17
-
-### Change
-- Update README.md
