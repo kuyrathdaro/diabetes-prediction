@@ -1,5 +1,5 @@
 # Use a large Node.js base image to build the application and name it "build"
-FROM node:18-alpine as build
+FROM node:20-alpine AS build
 
 # Exact same steps as before
 WORKDIR /app
@@ -13,7 +13,7 @@ COPY . /app
 RUN npm run build
 
 # Create a new Docker image and name it "prod"
-FROM node:18-alpine as prod
+FROM node:20-alpine AS prod
 
 WORKDIR /app
 
