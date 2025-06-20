@@ -1,56 +1,71 @@
-# Byte-compiled / optimized / compiled files
+# Byte-compiled / optimized / DLL files
 __pycache__/
-*.pyc
-*.pyd
-*.pyo
+*.py[cod]
+*$py.class
 
 # C extensions
 *.so
 
 # Distribution / packaging
 .Python
-env/
-venv/
-pip-wheel-metadata/
-dist/
 build/
-*.egg-info/
+develop-eggs/
+dist/
+downloads/
+eggs/
 .eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
 
-# Editors
-.idea/
-.vscode/
-*.sublime-project
-*.sublime-workspace
-
-# OS-specific
-.DS_Store
-Thumbs.db
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+env.bak/
+venv.bak/
 
 # Jupyter Notebook
-.ipynb_checkpoints/
+.ipynb_checkpoints
 
-# Data and models (crucial for ML projects)
-data/
-models/
-results/
-outputs/
+# Pytest
+.cache
+.pytest_cache/
+
+# VS Code
+.vscode/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Data files
 *.csv
-*.json
-*.pkl
+*.tsv
+*.data
+*.dat
+*.npz
+*.npy
 *.h5
-*.onnx
-*.pt
-*.tf
-*.ckpt
+*.hdf5
+
+# Model files
+*.pkl
 *.joblib
+*.pt
+*.pth
+*.onnx
 
 # Logs
-logs/
 *.log
 
-# Miscellaneous
-.env
-.pytest_cache/
-htmlcov/
-.coverage
+# OS files
+.DS_Store
+Thumbs.db
