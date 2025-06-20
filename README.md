@@ -3,6 +3,8 @@
 A full-stack web application for predicting diabetes using the PIMA Diabetes Dataset.  
 This project features a FastAPI backend for machine learning inference and a Nuxt 3 frontend with IndexedDB-powered history, modern UI, and responsive design.
 
+![Demo](assets/demo.gif)
+
 ---
 
 ## Features

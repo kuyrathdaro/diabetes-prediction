@@ -103,6 +103,10 @@
             class="bg-green-500 text-white text-base font-semibold px-6 py-3 rounded hover:bg-green-600 cursor-pointer shadow-md transition-all duration-150">
             Predict
           </button>
+          <button type="button" @click="resetForm"
+            class="bg-gray-200 text-gray-700 text-base font-semibold px-6 py-3 rounded hover:bg-gray-300 cursor-pointer shadow-md transition-all duration-150 ml-2">
+            Reset
+          </button>
         </div>
         <div class="flex-1 flex justify-end">
           <div class="flex-1 flex justify-end">
@@ -168,5 +172,15 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       errors.value = [diabetesStore.error];
     }
   }
+}
+
+function resetForm() {
+  Object.keys(state).forEach(key => {
+    // @ts-ignore
+    state[key] = undefined;
+  });
+  errors.value = [];
+  prediction.value = null;
+  diabetesStore.prediction = null;
 }
 </script>
